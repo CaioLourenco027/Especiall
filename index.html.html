@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Nossa História · Especial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0E1626;
+    --night-2:#182742;
+    --umbrella:#F2B33D;
+    --umbrella-deep:#D89A22;
+    --white:#FDFBF5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--night);
+    color:var(--white);
+    font-family:'Lora',Georgia,serif;
+    overflow:hidden;
+  }
+  h1,h2{font-family:'Bree Serif','Rockwell',Georgia,serif;font-weight:400}
+
+  /* chuva ambiente */
+  .rain{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .drop{
+    position:absolute;top:-12%;width:1.5px;height:58px;
+    background:linear-gradient(to bottom,rgba(160,190,235,0),rgba(160,190,235,.4));
+    animation:fall linear infinite;
+  }
+  @keyframes fall{to{transform:translateY(115vh)}}
+
+  /* ===== telas (uma por vez) ===== */
+  .screen{
+    position:fixed;inset:0;z-index:2;
+    display:flex;
+    text-align:center;padding:0 26px;
+    background:radial-gradient(130% 100% at 50% 0%,var(--night-2) 0%,var(--night) 65%);
+    opacity:0;pointer-events:none;transform:translateY(14px);
+    transition:opacity .8s ease,transform .8s ease;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .screen.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+  .screen-inner{max-width:560px;width:100%;margin:auto;padding:72px 0 64px}
+
+  .eyebrow{
+    font-family:'Bree Serif',serif;font-size:.74rem;
+    letter-spacing:.32em;text-transform:uppercase;color:var(--umbrella);
+    margin-bottom:14px;
+  }
+  .screen h2{
+    font-size:clamp(1.55rem,6.2vw,2.3rem);line-height:1.18;margin-bottom:24px;
+    text-shadow:0 4px 26px rgba(0,0,0,.45);
+  }
+  .screen p.story{
+    font-size:clamp(1.04rem,4.2vw,1.18rem);line-height:1.9;
+    color:#E9E3D3;text-align:left;
+  }
+  .art{margin:6px auto 22px;animation:floaty 5s ease-in-out infinite}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  /* navegação */
+  .nav{
+    margin-top:34px;
+    display:flex;flex-direction:column;align-items:center;gap:16px;
+  }
+  .next{
+    background:transparent;color:var(--umbrella);
+    border:2px solid var(--umbrella);border-radius:999px;
+    font-family:'Bree Serif',serif;font-size:1.02rem;
+    padding:13px 32px;cursor:pointer;
+    transition:background .25s,color .25s,transform .25s;
+  }
+  .next:hover,.next:focus-visible{background:var(--umbrella);color:#000;transform:scale(1.04)}
+  .next:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .back{
+    background:none;border:none;cursor:pointer;
+    font-family:'Lora',serif;font-style:italic;font-size:.95rem;
+    color:rgba(253,251,245,.55);
+    padding:6px 14px;border-radius:999px;
+    transition:color .25s;
+  }
+  .back:hover,.back:focus-visible{color:rgba(253,251,245,.9)}
+  .back:focus-visible{outline:2px solid rgba(253,251,245,.6);outline-offset:3px}
+
+  /* title card */
+  #s0{background:#000}
+  #s0 .tc-1{font-family:'Bree Serif',serif;font-size:clamp(.9rem,3vw,1.1rem);letter-spacing:.35em;text-transform:uppercase;color:#bfc9dd}
+  #s0 .tc-2{font-family:'Bree Serif',serif;font-size:clamp(1.9rem,7.5vw,3.2rem);margin-top:16px;line-height:1.2}
+  #s0 .tc-3{font-style:italic;color:#93a3c4;margin-top:22px;font-size:clamp(.95rem,3.4vw,1.1rem);line-height:1.7}
+
+  /* tela final */
+  #s5 .story{text-align:center}
+  #s5 .fecho{
+    font-family:'Bree Serif',serif;
+    font-size:clamp(1.5rem,6vw,2.2rem);
+    color:var(--umbrella);
+    margin-top:34px;line-height:1.35;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.2s !important}
+    .drop{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="rain" id="rain" aria-hidden="true"></div>
+
+<!-- ===== TELA 0 · Title card ===== -->
+<section class="screen active" id="s0">
+  <div class="screen-inner">
+    <div class="tc-1">Um especial em 5 episódios</div>
+    <div class="tc-2">“Como Eu Conheci<br>a Mulher da Minha Vida”</div>
+    <div class="tc-3">Crianças, um dia eu vou contar essa história para vocês.<br>Ela é real. E começa assim.</div>
+    <div class="nav">
+      <button class="next" onclick="startShow()">Assistir</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TELA 1 · E01 ===== -->
+<section class="screen" id="s1">
+  <div class="screen-inner">
+    <div class="art" aria-hidden="true">
+      <svg width="104" height="122" viewBox="0 0 150 180" fill="none">
+        <path d="M75 18 C 34 18, 8 48, 6 76 C 16 66, 27 66, 34 76 C 41 65, 54 65, 61 76 C 66 66, 84 66, 89 76 C 96 65, 109 65, 116 76 C 123 66, 134 66, 144 76 C 142 48, 116 18, 75 18 Z" fill="#F2B33D" stroke="#D89A22" stroke-width="3" stroke-linejoin="round"/>
+        <line x1="75" y1="18" x2="75" y2="8" stroke="#D89A22" stroke-width="4" stroke-linecap="round"/>
+        <line x1="75" y1="76" x2="75" y2="150" stroke="#8a6a2a" stroke-width="5" stroke-linecap="round"/>
+        <path d="M75 150 C 75 166, 58 168, 55 156" stroke="#8a6a2a" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Episódio 01</div>
+    <h2>O Piloto</h2>
+    <p class="story">Paola, toda grande história começa com um detalhe bobo que ninguém percebe na hora. A nossa começou no aniversário de um amigo meu, no dia 04/10/2019, quando ele teve a ideia de me colocar, junto com uns amigos, no grupo da sala dele. Ele não fazia ideia, e nem eu, de que naquele grupo estava a menina pela qual eu ia me apaixonar. A gente entrou, começou a conversar com o pessoal, e aí aconteceu: uma amiga sua mandou no grupo que você queria casar comigo. Era brincadeira, claro. Mas começamos a conversar naquele dia... e nunca mais paramos.</p>
+    <div class="nav">
+      <button class="next" onclick="go(2)">Próximo episódio</button>
+      <button class="back" onclick="go(0)">Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TELA 2 · E02 ===== -->
+<section class="screen" id="s2">
+  <div class="screen-inner">
+    <div class="eyebrow">Episódio 02</div>
+    <h2>Cara a Cara</h2>
+    <p class="story">A primeira vez que se vimos de verdade foi num evento da igreja, na praça com os adolescentes. Você chegou, a gente se abraçou e foi praticamente só isso. Éramos bebezinhos e estávamos com vergonha, mas o engraçado é que não precisou de mais nada, porque ali eu já tive a certeza de que era com você que eu queria passar o resto da minha vida.</p>
+    <div class="nav">
+      <button class="next" onclick="go(3)">Próximo episódio</button>
+      <button class="back" onclick="go(1)">Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TELA 3 · E03 ===== -->
+<section class="screen" id="s3">
+  <div class="screen-inner">
+    <div class="eyebrow">Episódio 03</div>
+    <h2>A Maior Decisão (Até Então)</h2>
+    <p class="story">No dia 02/07/2023, eu preparei uma surpresa para você: decorei seu quarto com pétalas de rosa, velas e te dei chocolates. Bem simplesinho, porque o que importava era a pergunta. Ali eu tomei uma das maiores decisões da minha vida: te pedir em namoro. E até hoje é a decisão que eu mais me orgulho de ter tomado, uma escolha que, se eu voltasse no tempo, eu faria tudo igual.</p>
+    <div class="nav">
+      <button class="next" onclick="go(4)">Próximo episódio</button>
+      <button class="back" onclick="go(2)">Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TELA 4 · E04 ===== -->
+<section class="screen" id="s4">
+  <div class="screen-inner">
+    <div class="eyebrow">Episódio 04</div>
+    <h2>A Protagonista</h2>
+    <p class="story">Mas deixa eu te contar quando eu percebi que era você. Foi antes mesmo da gente se ver pessoalmente, naquelas conversas de horas e horas no WhatsApp, todos os dias. A gente nem tinha assunto às vezes, e mesmo assim ficava ali, falando qualquer coisa, porque o que importava não era o assunto, era você. Eu podia falar de nada com você por horas, e era melhor que falar de tudo com qualquer outra pessoa.</p>
+    <p class="story" style="margin-top:1.2em">E de lá pra cá, você mudou tudo em mim. A forma como eu penso, a forma como eu vejo as coisas. Você me fez melhorar em tanta coisa que hoje eu sei que existe um Caio antes de você e um Caio depois de você, e o de depois é muito melhor. Eu te amo mais que tudo nessa vida, e se depender de mim, você vai estar do meu lado para sempre.</p>
+    <div class="nav">
+      <button class="next" onclick="go(5)">Episódio final</button>
+      <button class="back" onclick="go(3)">Voltar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TELA 5 · Final ===== -->
+<section class="screen" id="s5">
+  <div class="screen-inner">
+    <div class="art" aria-hidden="true">
+      <svg width="62" height="74" viewBox="0 0 150 180" fill="none">
+        <path d="M75 18 C 34 18, 8 48, 6 76 C 16 66, 27 66, 34 76 C 41 65, 54 65, 61 76 C 66 66, 84 66, 89 76 C 96 65, 109 65, 116 76 C 123 66, 134 66, 144 76 C 142 48, 116 18, 75 18 Z" fill="#F2B33D" stroke="#D89A22" stroke-width="3" stroke-linejoin="round"/>
+        <line x1="75" y1="18" x2="75" y2="8" stroke="#D89A22" stroke-width="4" stroke-linecap="round"/>
+        <line x1="75" y1="76" x2="75" y2="150" stroke="#8a6a2a" stroke-width="5" stroke-linecap="round"/>
+        <path d="M75 150 C 75 166, 58 168, 55 156" stroke="#8a6a2a" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="eyebrow">Episódio Final</div>
+    <p class="story">Naquele dia, com seu quarto cheio de velas e pétalas, eu tomei uma das maiores decisões da minha vida.</p>
+    <div class="fecho">E hoje, aqui,<br>nesse nascer do sol...<br>eu vim tomar a outra.</div>
+    <div class="nav">
+      <button class="back" onclick="go(4)">Voltar</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  function startShow(){
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    go(1);
+  }
+  function go(n){
+    document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active', i===n));
+    document.querySelector('#s'+n).scrollTop = 0;
+  }
+
+  (function makeRain(){
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rain = document.getElementById('rain');
+    for (let i = 0; i < 40; i++){
+      const d = document.createElement('div');
+      d.className = 'drop';
+      d.style.left = Math.random()*100 + '%';
+      d.style.animationDuration = (1.1 + Math.random()*1.4) + 's';
+      d.style.animationDelay = (Math.random()*3) + 's';
+      d.style.opacity = .3 + Math.random()*.4;
+      rain.appendChild(d);
+    }
+  })();
+</script>
+</body>
+</html>
